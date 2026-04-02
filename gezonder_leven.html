@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gezonder Leven — Activeer Je Motivatie</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f2ec;
+    --surface: #fffef9;
+    --surface2: #f0ede5;
+    --green: #2d6a4f;
+    --green-light: #40916c;
+    --green-pale: #d8f3dc;
+    --accent: #e07a5f;
+    --accent2: #f2cc8f;
+    --text: #1a1a1a;
+    --text-soft: #5a5a5a;
+    --text-muted: #9a9a9a;
+    --border: #e0dbd0;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(45,106,79,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(224,122,95,0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 60px 24px 80px;
+  }
+
+  /* Header */
+  .site-header {
+    text-align: center;
+    margin-bottom: 56px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green);
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 24px;
+  }
+
+  .logo-badge::before {
+    content: '✦';
+    font-size: 10px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 6vw, 54px);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--green);
+  }
+
+  .intro-text {
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--text-soft);
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .intro-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 40px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.2s; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .card-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--green);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+  }
+
+  .card-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  /* Questions */
+  .question-item {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .question-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .question-text {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 14px;
+    font-weight: 400;
+  }
+
+  .q-number {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--green-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+
+  /* Radio scale */
+  .scale-row {
+    display: flex;
+    gap: 6px;
+  }
+
+  .scale-option {
+    flex: 1;
+    text-align: center;
+  }
+
+  .scale-option input[type="radio"] {
+    display: none;
+  }
+
+  .scale-option label {
+    display: block;
+    padding: 8px 4px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    font-size: 12px;
+    color: var(--text-soft);
+    line-height: 1.3;
+    user-select: none;
+  }
+
+  .scale-option label .scale-num {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .scale-option input:checked + label {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+    box-shadow: 0 4px 12px rgba(45,106,79,0.3);
+    transform: translateY(-2px);
+  }
+
+  .scale-option input:checked + label .scale-num {
+    color: white;
+  }
+
+  .scale-option label:hover {
+    border-color: var(--green-light);
+    background: var(--green-pale);
+  }
+
+  .scale-option input:checked + label:hover {
+    background: var(--green);
+  }
+
+  /* Score display */
+  .score-display {
+    margin-top: 28px;
+    padding: 20px 24px;
+    background: var(--surface2);
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .score-label {
+    font-size: 14px;
+    color: var(--text-soft);
+  }
+
+  .score-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green);
+  }
+
+  .score-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .score-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--green-light), var(--green));
+    border-radius: 100px;
+    transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    width: 0%;
+  }
+
+  .score-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    text-align: center;
+    font-style: italic;
+  }
+
+  .score-note.emi-active {
+    color: var(--green);
+    font-weight: 500;
+    font-style: normal;
+  }
+
+  /* Audio section */
+  .audio-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 520px) {
+    .audio-grid { grid-template-columns: 1fr; }
+  }
+
+  .audio-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .audio-btn:hover {
+    border-color: var(--green-light);
+    background: var(--green-pale);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45,106,79,0.15);
+  }
+
+  .audio-btn.active {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+    box-shadow: 0 6px 24px rgba(45,106,79,0.35);
+    transform: translateY(-2px);
+  }
+
+  .audio-btn .btn-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .audio-btn:not(.active) .btn-icon {
+    background: white;
+  }
+
+  .btn-info {
+    flex: 1;
+  }
+
+  .btn-label {
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .btn-desc {
+    font-size: 12px;
+    opacity: 0.7;
+    font-weight: 400;
+  }
+
+  /* Player area */
+  .player-area {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1.5px solid var(--border);
+    background: #111;
+    display: none;
+  }
+
+  .player-area.visible {
+    display: block;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  /* Stimulus display */
+  .stimulus-wrap {
+    position: relative;
+    background: #000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    min-height: 120px;
+  }
+
+  .stimulus-wrap.visible {
+    display: flex;
+  }
+
+  .stimulus-wrap img {
+    max-width: 100%;
+    width: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+
+  /* Animated EMi stimulus (CSS recreation) */
+  .emi-stimulus {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 24px 16px;
+    background: #00cc00;
+  }
+
+  .emi-block {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    border: 2px solid #000;
+    flex-shrink: 0;
+    transition: background 0.1s;
+  }
+
+  /* Audio player */
+  .audio-player-wrap {
+    padding: 20px 24px;
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .player-track-info {
+    color: white;
+    font-size: 14px;
+  }
+
+  .player-track-name {
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 2px;
+  }
+
+  .player-track-sub {
+    color: rgba(255,255,255,0.5);
+    font-size: 12px;
+  }
+
+  .audio-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .play-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--green-light);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .play-btn:hover {
+    background: var(--green);
+    transform: scale(1.05);
+  }
+
+  .progress-area {
+    flex: 1;
+  }
+
+  .progress-bar-wrap {
+    height: 6px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 6px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: var(--green-light);
+    border-radius: 100px;
+    width: 0%;
+    pointer-events: none;
+    transition: width 0.1s linear;
+  }
+
+  .time-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  audio { display: none; }
+
+  /* Privacy note */
+  .privacy-note {
+    margin-top: 24px;
+    padding: 14px 18px;
+    background: rgba(45,106,79,0.06);
+    border-radius: 10px;
+    border-left: 3px solid var(--green-light);
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .privacy-note::before {
+    content: '🔒';
+    font-size: 14px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .card { padding: 24px 20px; }
+    .scale-row { gap: 4px; }
+    .scale-option label { padding: 7px 2px; font-size: 11px; }
+    .scale-option label .scale-num { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo-badge">Gezonder Leven</div>
+    <h1>Activeer je <em>diepe motivatie</em></h1>
+    <p class="intro-text">
+      Wil jij gemakkelijk gezonder gaan leven? Luister naar één of meer van de audio's.
+      Je hebt een goede kans dat jouw <strong>diepe motivatie wordt geactiveerd</strong> — 
+      en dan gaat gezonder leven als vanzelf.
+    </p>
+  </header>
+
+  <!-- Questionnaire -->
+  <div class="card" id="questionnaire-card">
+    <div class="card-header">
+      <div class="card-number">1</div>
+      <div>
+        <div class="card-title">Kort vragenlijstje</div>
+        <div class="card-subtitle">6 stellingen — vul eenmalig in</div>
+      </div>
+    </div>
+
+    <div id="questions-list">
+
+      <div class="question-item">
+        <div class="q-number">Stelling 1</div>
+        <div class="question-text">Ik merk dat ik sommige dingen heel goed heb gedaan.</div>
+        <div class="scale-row">
+          <div class="scale-option">
+            <input type="radio" name="q1" id="q1_1" value="1">
+            <label for="q1_1"><span class="scale-num">1</span>Nooit</label>
+          </div>
+          <div class="scale-option">
+            <input type="radio" name="q1" id="q1_2" value="2">
+            <label for="q1_2"><span class="scale-num">2</span>Soms</label>
+          </div>
+          <div class="scale-option">
+            <input type="radio" name="q1" id="q1_3" value="3">
+            <label for="q1_3"><span class="scale-num">3</span>Regelmatig</label>
+          </div>
+          <div class="scale-option">
+            <input type="radio" name="q1" id="q1_4" value="4">
+            <label for="q1_4"><span class="scale-num">4</span>Vaak</label>
+          </div>
+          <div class="scale-option">
+            <input type="radio" name="q1" id="q1_5" value="5">
+            <label for="q1_5"><span class="scale-num">5</span>Heel vaak</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="q-number">Stelling 2</div>
+        <div class="question-text">Als ik me slecht voel over mezelf, denk ik aan de dingen die ik wel goed doe.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q2" id="q2_1" value="1"><label for="q2_1"><span class="scale-num">1</span>Nooit</label></div>
+          <div class="scale-option"><input type="radio" name="q2" id="q2_2" value="2"><label for="q2_2"><span class="scale-num">2</span>Soms</label></div>
+          <div class="scale-option"><input type="radio" name="q2" id="q2_3" value="3"><label for="q2_3"><span class="scale-num">3</span>Regelmatig</label></div>
+          <div class="scale-option"><input type="radio" name="q2" id="q2_4" value="4"><label for="q2_4"><span class="scale-num">4</span>Vaak</label></div>
+          <div class="scale-option"><input type="radio" name="q2" id="q2_5" value="5"><label for="q2_5"><span class="scale-num">5</span>Heel vaak</label></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="q-number">Stelling 3</div>
+        <div class="question-text">Ik denk aan dingen die ik in het verleden goed heb gedaan.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q3" id="q3_1" value="1"><label for="q3_1"><span class="scale-num">1</span>Nooit</label></div>
+          <div class="scale-option"><input type="radio" name="q3" id="q3_2" value="2"><label for="q3_2"><span class="scale-num">2</span>Soms</label></div>
+          <div class="scale-option"><input type="radio" name="q3" id="q3_3" value="3"><label for="q3_3"><span class="scale-num">3</span>Regelmatig</label></div>
+          <div class="scale-option"><input type="radio" name="q3" id="q3_4" value="4"><label for="q3_4"><span class="scale-num">4</span>Vaak</label></div>
+          <div class="scale-option"><input type="radio" name="q3" id="q3_5" value="5"><label for="q3_5"><span class="scale-num">5</span>Heel vaak</label></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="q-number">Stelling 4</div>
+        <div class="question-text">Als ik iets heb gedaan waardoor ik ontevreden ben, zeg ik tegen mezelf dat ik niet alles verkeerd doe.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q4" id="q4_1" value="1"><label for="q4_1"><span class="scale-num">1</span>Nooit</label></div>
+          <div class="scale-option"><input type="radio" name="q4" id="q4_2" value="2"><label for="q4_2"><span class="scale-num">2</span>Soms</label></div>
+          <div class="scale-option"><input type="radio" name="q4" id="q4_3" value="3"><label for="q4_3"><span class="scale-num">3</span>Regelmatig</label></div>
+          <div class="scale-option"><input type="radio" name="q4" id="q4_4" value="4"><label for="q4_4"><span class="scale-num">4</span>Vaak</label></div>
+          <div class="scale-option"><input type="radio" name="q4" id="q4_5" value="5"><label for="q4_5"><span class="scale-num">5</span>Heel vaak</label></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="q-number">Stelling 5</div>
+        <div class="question-text">Ik besef dat ik naast de 'domme' dingen die ik doe, ook een aantal dingen heel goed doe.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q5" id="q5_1" value="1"><label for="q5_1"><span class="scale-num">1</span>Nooit</label></div>
+          <div class="scale-option"><input type="radio" name="q5" id="q5_2" value="2"><label for="q5_2"><span class="scale-num">2</span>Soms</label></div>
+          <div class="scale-option"><input type="radio" name="q5" id="q5_3" value="3"><label for="q5_3"><span class="scale-num">3</span>Regelmatig</label></div>
+          <div class="scale-option"><input type="radio" name="q5" id="q5_4" value="4"><label for="q5_4"><span class="scale-num">4</span>Vaak</label></div>
+          <div class="scale-option"><input type="radio" name="q5" id="q5_5" value="5"><label for="q5_5"><span class="scale-num">5</span>Heel vaak</label></div>
+        </div>
+      </div>
+
+      <div class="question-item">
+        <div class="q-number">Stelling 6</div>
+        <div class="question-text">Ik denk aan de dingen die ik goed voor elkaar heb.</div>
+        <div class="scale-row">
+          <div class="scale-option"><input type="radio" name="q6" id="q6_1" value="1"><label for="q6_1"><span class="scale-num">1</span>Nooit</label></div>
+          <div class="scale-option"><input type="radio" name="q6" id="q6_2" value="2"><label for="q6_2"><span class="scale-num">2</span>Soms</label></div>
+          <div class="scale-option"><input type="radio" name="q6" id="q6_3" value="3"><label for="q6_3"><span class="scale-num">3</span>Regelmatig</label></div>
+          <div class="scale-option"><input type="radio" name="q6" id="q6_4" value="4"><label for="q6_4"><span class="scale-num">4</span>Vaak</label></div>
+          <div class="scale-option"><input type="radio" name="q6" id="q6_5" value="5"><label for="q6_5"><span class="scale-num">5</span>Heel vaak</label></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Score display -->
+    <div class="score-display" id="score-display" style="display:none">
+      <div>
+        <div class="score-label">Jouw score</div>
+        <div class="score-value" id="score-number">—</div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar" id="score-bar"></div>
+      </div>
+      <div class="score-label" style="font-size:13px; color: var(--text-muted)">max 30</div>
+    </div>
+    <div class="score-note" id="score-note" style="display:none"></div>
+
+    <div class="privacy-note">
+      Deze pagina gebruikt geen database. Er wordt niets opgeslagen. 
+      Jouw antwoorden blijven volledig anoniem op dit apparaat.
+    </div>
+  </div>
+
+  <!-- Audio chooser -->
+  <div class="card" id="audio-card" style="animation-delay:0.15s">
+    <div class="card-header">
+      <div class="card-number">2</div>
+      <div>
+        <div class="card-title">Kies een audio</div>
+        <div class="card-subtitle">Je kunt elk moment wisselen van audio</div>
+      </div>
+    </div>
+
+    <div class="audio-grid">
+      <button class="audio-btn" data-audio="groente" onclick="selectAudio(this)">
+        <div class="btn-icon">🥦</div>
+        <div class="btn-info">
+          <div class="btn-label">Groente & fruit</div>
+          <div class="btn-desc">Meer plantaardige voeding</div>
+        </div>
+      </button>
+      <button class="audio-btn" data-audio="roken" onclick="selectAudio(this)">
+        <div class="btn-icon">🚭</div>
+        <div class="btn-info">
+          <div class="btn-label">Stoppen met roken</div>
+          <div class="btn-desc">Vrij van sigaretten</div>
+        </div>
+      </button>
+      <button class="audio-btn" data-audio="alcohol" onclick="selectAudio(this)">
+        <div class="btn-icon">🍷</div>
+        <div class="btn-info">
+          <div class="btn-label">Alcohol</div>
+          <div class="btn-desc">Minder of stoppen</div>
+        </div>
+      </button>
+      <button class="audio-btn" data-audio="vlees" onclick="selectAudio(this)">
+        <div class="btn-icon">🥗</div>
+        <div class="btn-info">
+          <div class="btn-label">Vlees eten</div>
+          <div class="btn-desc">Bewuster omgaan met vlees</div>
+        </div>
+      </button>
+      <button class="audio-btn" data-audio="gokken" onclick="selectAudio(this)" style="grid-column: span 2;">
+        <div class="btn-icon">🎲</div>
+        <div class="btn-info">
+          <div class="btn-label">Online gokken</div>
+          <div class="btn-desc">Stoppen met gokken</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Player -->
+    <div class="player-area" id="player-area">
+      <!-- Stimulus (only shown when score < 3 avg) -->
+      <div class="stimulus-wrap" id="stimulus-wrap">
+        <div class="emi-stimulus" id="emi-blocks"></div>
+      </div>
+
+      <!-- Audio player UI -->
+      <div class="audio-player-wrap">
+        <div class="player-track-info">
+          <div class="player-track-name" id="track-name">—</div>
+          <div class="player-track-sub">Motivatie audio · Nederlands</div>
+        </div>
+        <div class="audio-controls">
+          <button class="play-btn" id="play-btn" onclick="togglePlay()">▶</button>
+          <div class="progress-area">
+            <div class="progress-bar-wrap" id="progress-wrap" onclick="seekAudio(event)">
+              <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="time-row">
+              <span id="time-current">0:00</span>
+              <span id="time-total">0:00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <audio id="audio-element" preload="metadata"></audio>
+  </div>
+
+</div>
+
+<script>
+// === State ===
+const audioFiles = {
+  groente: 'audio_groente.mp4',
+  roken:   'audio_roken.mp4',
+  alcohol: 'audio_alcohol.mp4',
+  vlees:   'audio_vlees.mp4',
+  gokken:  'audio_gokken.mp4'
+};
+
+const audioNames = {
+  groente: 'Groente & Fruit',
+  roken:   'Stoppen met Roken',
+  alcohol: 'Alcohol',
+  vlees:   'Vlees Eten',
+  gokken:  'Online Gokken'
+};
+
+let currentScore = null;
+let showEmi = false;
+let emiInterval = null;
+let currentAudio = null;
+let isPlaying = false;
+
+const audioEl = document.getElementById('audio-element');
+
+// === Build EMi blocks ===
+function buildEmiBlocks() {
+  const wrap = document.getElementById('emi-blocks');
+  wrap.innerHTML = '';
+  const count = 22;
+  for (let i = 0; i < count; i++) {
+    const div = document.createElement('div');
+    div.className = 'emi-block';
+    div.id = 'emi-' + i;
+    div.style.background = i === 0 ? '#cc0000' : '#f0f0f0';
+    wrap.appendChild(div);
+  }
+}
+buildEmiBlocks();
+
+// === EMi animation ===
+let emiPosition = 0;
+let emiDirection = 1;
+
+function startEmi() {
+  stopEmi();
+  emiPosition = 0;
+  emiDirection = 1;
+  emiInterval = setInterval(() => {
+    // Clear all to white/light
+    for (let i = 0; i < 22; i++) {
+      document.getElementById('emi-' + i).style.background = '#f0f0f0';
+    }
+    // Red block at position
+    const el = document.getElementById('emi-' + emiPosition);
+    if (el) el.style.background = '#cc0000';
+
+    emiPosition += emiDirection;
+    if (emiPosition >= 21) { emiPosition = 21; emiDirection = -1; }
+    if (emiPosition <= 0)  { emiPosition = 0;  emiDirection = 1; }
+  }, 80);
+}
+
+function stopEmi() {
+  if (emiInterval) { clearInterval(emiInterval); emiInterval = null; }
+}
+
+// === Score calculation ===
+function calcScore() {
+  let total = 0;
+  let answered = 0;
+  for (let q = 1; q <= 6; q++) {
+    const val = document.querySelector(`input[name="q${q}"]:checked`);
+    if (val) { total += parseInt(val.value); answered++; }
+  }
+  return answered === 6 ? total : null;
+}
+
+function getAvgScore(total) {
+  return total !== null ? total / 6 : null;
+}
+
+document.querySelectorAll('input[type="radio"]').forEach(r => {
+  r.addEventListener('change', updateScore);
+});
+
+function updateScore() {
+  const total = calcScore();
+  if (total === null) return;
+
+  const avg = getAvgScore(total);
+  currentScore = total;
+  showEmi = avg < 3;
+
+  // Update score display
+  const scoreDisplay = document.getElementById('score-display');
+  const scoreNum = document.getElementById('score-number');
+  const scoreBar = document.getElementById('score-bar');
+  const scoreNote = document.getElementById('score-note');
+
+  scoreDisplay.style.display = 'flex';
+  scoreNote.style.display = 'block';
+  scoreNum.textContent = total;
+  scoreBar.style.width = ((total / 30) * 100) + '%';
+
+  if (showEmi) {
+    scoreNote.textContent = '✦ Op basis van jouw score ontvang je een extra visuele ondersteuning bij de audio.';
+    scoreNote.className = 'score-note emi-active';
+  } else {
+    scoreNote.textContent = 'Je luistert naar de audio zonder extra visueel element.';
+    scoreNote.className = 'score-note';
+  }
+
+  // Update stimulus visibility if audio is active
+  updateStimulusVisibility();
+}
+
+function updateStimulusVisibility() {
+  const stimWrap = document.getElementById('stimulus-wrap');
+  if (showEmi && isPlaying) {
+    stimWrap.classList.add('visible');
+    startEmi();
+  } else {
+    stimWrap.classList.remove('visible');
+    stopEmi();
+  }
+}
+
+// === Audio selection ===
+function selectAudio(btn) {
+  // Remove active from all
+  document.querySelectorAll('.audio-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const key = btn.dataset.audio;
+  currentAudio = key;
+
+  // Update audio element
+  const wasPlaying = isPlaying;
+  if (isPlaying) {
+    audioEl.pause();
+    isPlaying = false;
+  }
+
+  audioEl.src = audioFiles[key];
+  audioEl.load();
+
+  document.getElementById('track-name').textContent = audioNames[key];
+  document.getElementById('play-btn').textContent = '▶';
+  document.getElementById('progress-bar').style.width = '0%';
+  document.getElementById('time-current').textContent = '0:00';
+  document.getElementById('time-total').textContent = '0:00';
+
+  // Show player
+  document.getElementById('player-area').classList.add('visible');
+
+  // Hide stimulus on track change
+  document.getElementById('stimulus-wrap').classList.remove('visible');
+  stopEmi();
+
+  // Auto-play
+  setTimeout(() => {
+    audioEl.play().then(() => {
+      isPlaying = true;
+      document.getElementById('play-btn').textContent = '⏸';
+      updateStimulusVisibility();
+    }).catch(() => {});
+  }, 100);
+}
+
+function togglePlay() {
+  if (!currentAudio) return;
+  if (isPlaying) {
+    audioEl.pause();
+    isPlaying = false;
+    document.getElementById('play-btn').textContent = '▶';
+    document.getElementById('stimulus-wrap').classList.remove('visible');
+    stopEmi();
+  } else {
+    audioEl.play().then(() => {
+      isPlaying = true;
+      document.getElementById('play-btn').textContent = '⏸';
+      updateStimulusVisibility();
+    }).catch(() => {});
+  }
+}
+
+function seekAudio(e) {
+  if (!audioEl.duration) return;
+  const wrap = document.getElementById('progress-wrap');
+  const rect = wrap.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left) / rect.width;
+  audioEl.currentTime = ratio * audioEl.duration;
+}
+
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+audioEl.addEventListener('timeupdate', () => {
+  const pct = audioEl.duration ? (audioEl.currentTime / audioEl.duration) * 100 : 0;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('time-current').textContent = formatTime(audioEl.currentTime);
+});
+
+audioEl.addEventListener('loadedmetadata', () => {
+  document.getElementById('time-total').textContent = formatTime(audioEl.duration);
+});
+
+audioEl.addEventListener('ended', () => {
+  isPlaying = false;
+  document.getElementById('play-btn').textContent = '▶';
+  document.getElementById('stimulus-wrap').classList.remove('visible');
+  stopEmi();
+});
+</script>
+</body>
+</html>

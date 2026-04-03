@@ -392,21 +392,33 @@
     position: relative;
     background: #000;
     display: none;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: 20px;
-    min-height: 120px;
   }
 
   .stimulus-wrap.visible {
     display: flex;
   }
 
-  .stimulus-wrap img {
-    max-width: 100%;
-    width: 100%;
-    object-fit: contain;
-    border-radius: 8px;
+  /* EMi instruction text */
+  .emi-instruction {
+    color: white;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.3;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .emi-warning {
+    color: #ff4444;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: 'DM Sans', sans-serif;
   }
 
   /* Animated EMi stimulus (CSS recreation) */
@@ -699,7 +711,21 @@
     </div>
 
     <div class="audio-grid">
-      <button class="audio-btn" data-audio="groente" onclick="selectAudio(this)">
+      <button class="audio-btn" data-audio="vlees" onclick="selectAudio(this)">
+        <div class="btn-icon">🥗</div>
+        <div class="btn-info">
+          <div class="btn-label">Vlees eten</div>
+          <div class="btn-desc">Bewuster omgaan met vlees</div>
+        </div>
+      </button>
+      <button class="audio-btn" data-audio="gokken" onclick="selectAudio(this)">
+        <div class="btn-icon">🎲</div>
+        <div class="btn-info">
+          <div class="btn-label">Online gokken</div>
+          <div class="btn-desc">Stoppen met gokken</div>
+        </div>
+      </button>
+      <button class="audio-btn" data-audio="grenfr" onclick="selectAudio(this)">
         <div class="btn-icon">🥦</div>
         <div class="btn-info">
           <div class="btn-label">Groente & fruit</div>
@@ -713,6 +739,13 @@
           <div class="btn-desc">Vrij van sigaretten</div>
         </div>
       </button>
+      <button class="audio-btn" data-audio="socmed" onclick="selectAudio(this)">
+        <div class="btn-icon">📱</div>
+        <div class="btn-info">
+          <div class="btn-label">Social media</div>
+          <div class="btn-desc">Minder schermtijd</div>
+        </div>
+      </button>
       <button class="audio-btn" data-audio="alcohol" onclick="selectAudio(this)">
         <div class="btn-icon">🍷</div>
         <div class="btn-info">
@@ -720,26 +753,14 @@
           <div class="btn-desc">Minder of stoppen</div>
         </div>
       </button>
-      <button class="audio-btn" data-audio="vlees" onclick="selectAudio(this)">
-        <div class="btn-icon">🥗</div>
-        <div class="btn-info">
-          <div class="btn-label">Vlees eten</div>
-          <div class="btn-desc">Bewuster omgaan met vlees</div>
-        </div>
-      </button>
-      <button class="audio-btn" data-audio="gokken" onclick="selectAudio(this)" style="grid-column: span 2;">
-        <div class="btn-icon">🎲</div>
-        <div class="btn-info">
-          <div class="btn-label">Online gokken</div>
-          <div class="btn-desc">Stoppen met gokken</div>
-        </div>
-      </button>
     </div>
 
     <!-- Player -->
     <div class="player-area" id="player-area">
-      <!-- Stimulus (only shown when score < 3 avg) -->
+      <!-- Stimulus (only shown when avg score < 3) -->
       <div class="stimulus-wrap" id="stimulus-wrap">
+        <div class="emi-instruction">Blijf tijdens het luisteren naar het rode blokje kijken, de hele tijd</div>
+        <div class="emi-warning">Als je epilepsie-gevoelig bent stop dan nu met kijken</div>
         <div class="emi-stimulus" id="emi-blocks"></div>
       </div>
 
@@ -772,19 +793,21 @@
 <script>
 // === State ===
 const audioFiles = {
-  groente: 'audio_groente.mp4',
-  roken:   'audio_roken.mp4',
-  alcohol: 'audio_alcohol.mp4',
-  vlees:   'audio_vlees.mp4',
-  gokken:  'audio_gokken.mp4'
+  vlees:   'text_vlees.mp3',
+  gokken:  'text_gokken.mp3',
+  grenfr:  'text_grenfr.mp3',
+  roken:   'text_roken.mp3',
+  socmed:  'text_socmed.mp3',
+  alcohol: 'text_alcohol.mp3'
 };
 
 const audioNames = {
-  groente: 'Groente & Fruit',
-  roken:   'Stoppen met Roken',
-  alcohol: 'Alcohol',
   vlees:   'Vlees Eten',
-  gokken:  'Online Gokken'
+  gokken:  'Online Gokken',
+  grenfr:  'Groente & Fruit',
+  roken:   'Stoppen met Roken',
+  socmed:  'Social Media',
+  alcohol: 'Alcohol'
 };
 
 let currentScore = null;
@@ -819,11 +842,9 @@ function startEmi() {
   emiPosition = 0;
   emiDirection = 1;
   emiInterval = setInterval(() => {
-    // Clear all to white/light
     for (let i = 0; i < 16; i++) {
       document.getElementById('emi-' + i).style.background = '#f0f0f0';
     }
-    // Red block at position
     const el = document.getElementById('emi-' + emiPosition);
     if (el) el.style.background = '#cc0000';
 
@@ -864,7 +885,6 @@ function updateScore() {
   currentScore = total;
   showEmi = avg < 3;
 
-  // Update score display
   const scoreDisplay = document.getElementById('score-display');
   const scoreNum = document.getElementById('score-number');
   const scoreBar = document.getElementById('score-bar');
@@ -883,7 +903,6 @@ function updateScore() {
     scoreNote.className = 'score-note';
   }
 
-  // Update stimulus visibility if audio is active
   updateStimulusVisibility();
 }
 
@@ -900,15 +919,12 @@ function updateStimulusVisibility() {
 
 // === Audio selection ===
 function selectAudio(btn) {
-  // Remove active from all
   document.querySelectorAll('.audio-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
 
   const key = btn.dataset.audio;
   currentAudio = key;
 
-  // Update audio element
-  const wasPlaying = isPlaying;
   if (isPlaying) {
     audioEl.pause();
     isPlaying = false;
@@ -923,14 +939,11 @@ function selectAudio(btn) {
   document.getElementById('time-current').textContent = '0:00';
   document.getElementById('time-total').textContent = '0:00';
 
-  // Show player
   document.getElementById('player-area').classList.add('visible');
 
-  // Hide stimulus on track change
   document.getElementById('stimulus-wrap').classList.remove('visible');
   stopEmi();
 
-  // Auto-play
   setTimeout(() => {
     audioEl.play().then(() => {
       isPlaying = true;
